@@ -1,13 +1,33 @@
 package com.example.app.pitstop;
 
+import com.example.app.pitstop.api.*;
+import com.example.app.refdata.api.OperatorId;
+import io.fluxcapacitor.common.serialization.JsonUtils;
 import io.fluxcapacitor.javaclient.test.TestFixture;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 class PitStopTest {
 
-    final TestFixture testFixture = TestFixture.create(PitStopApi.class);
+    final TestFixture testFixture = TestFixture.create(PitStopApi.class, Handler.class);
+
+    @Test
+    void createIndicent() {
+        IncidentDetails details = IncidentDetails.builder().description("hoi").vehicle(Vehicle.builder().licensePlateNumber("06-11").build()).location(GeoLocation.builder().latitude(BigDecimal.ONE).longitude(BigDecimal.ONE).build()).build();
+        testFixture.whenPost("/api/incidents", JsonUtils.asJson(details)).<IncidentId>expectResult(IncidentId.class);
+    }
+
+    @Test
+    void offerAssistance() {
+        IncidentDetails incidentDetails = IncidentDetails.builder().description("hoi").vehicle(Vehicle.builder().licensePlateNumber("06-11").build()).location(GeoLocation.builder().latitude(BigDecimal.ONE).longitude(BigDecimal.ONE).build()).build();
+        OfferDetails offerDetails = OfferDetails.builder().operatorId(new OperatorId("0")).price(BigDecimal.TWO).build();
+        testFixture.givenPost("/api/incidents", JsonUtils.asJson(incidentDetails))
+                .givenPost("api/incidents/0/offers", JsonUtils.asJson(offerDetails))
+                .whenGet("/api/incidents").<List<Incident>>expectResult(l -> !l.getFirst().getOffers().isEmpty());
+    }
+
 
     @Test
     void getViaApi() {

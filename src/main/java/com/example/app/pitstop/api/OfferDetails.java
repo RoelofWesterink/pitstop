@@ -6,11 +6,13 @@ import io.fluxcapacitor.javaclient.modeling.AssertLegal;
 import io.fluxcapacitor.javaclient.tracking.handling.IllegalCommandException;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Builder;
 import lombok.Value;
 
 import java.math.BigDecimal;
 
 @Value
+@Builder
 public class OfferDetails {
     @NotNull
     OperatorId operatorId;
