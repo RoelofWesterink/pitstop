@@ -3,7 +3,6 @@ package com.example.app.pitstop;
 import com.example.app.pitstop.api.*;
 import com.example.app.pitstop.command.CloseIncident;
 import com.example.app.refdata.api.OperatorId;
-import io.fluxcapacitor.common.serialization.JsonUtils;
 import io.fluxcapacitor.javaclient.test.TestFixture;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
