@@ -2,6 +2,7 @@ package com.example.app.pitstop.command;
 
 import com.example.app.pitstop.api.Incident;
 import com.example.app.pitstop.api.IncidentId;
+import com.example.app.user.authentication.Sender;
 import io.fluxcapacitor.javaclient.FluxCapacitor;
 import io.fluxcapacitor.javaclient.common.Message;
 import io.fluxcapacitor.javaclient.modeling.AssertLegal;
@@ -35,5 +36,11 @@ public class CloseIncident implements Request<Void> {
         if(incident == null){
             throw new IllegalCommandException("Incident not found");
         }
+    }
+
+    @AssertLegal
+    void assertAuthorized(Incident incident, Sender sender) {
+        if(!incident.getReporter().equals(sender.getUserId()) && !sender.isAdmin())
+            throw new IllegalCommandException("Not authorized to close");
     }
 }

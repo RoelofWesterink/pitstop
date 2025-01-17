@@ -25,7 +25,17 @@ class PitStopTest {
         OfferDetails offerDetails = OfferDetails.builder().operatorId(new OperatorId("0")).price(BigDecimal.TWO).build();
         testFixture.givenPost("/api/incidents", JsonUtils.asJson(incidentDetails))
                 .givenPost("api/incidents/0/offers", JsonUtils.asJson(offerDetails))
-                .whenGet("/api/incidents").<List<Incident>>expectResult(l -> !l.getFirst().getOffers().isEmpty());
+                .whenGet("/api/incidents").<List<Incident>>expectResult(l -> !l.getFirst().getOffers().getFirst().isAccepted());
+    }
+
+    @Test
+    void acceptOffer() {
+        IncidentDetails incidentDetails = IncidentDetails.builder().description("hoi").vehicle(Vehicle.builder().licensePlateNumber("06-11").build()).location(GeoLocation.builder().latitude(BigDecimal.ONE).longitude(BigDecimal.ONE).build()).build();
+        OfferDetails offerDetails = OfferDetails.builder().operatorId(new OperatorId("0")).price(BigDecimal.TWO).build();
+        testFixture.givenPost("/api/incidents", JsonUtils.asJson(incidentDetails))
+                .givenPost("api/incidents/0/offers", JsonUtils.asJson(offerDetails))
+                .givenPost("api/incidents/0/offers/1/accept", null)
+                .whenGet("/api/incidents").<List<Incident>>expectResult(l -> l.getFirst().getOffers().getFirst().isAccepted());
     }
 
 

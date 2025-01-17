@@ -1,7 +1,6 @@
 package com.example.app.pitstop.command;
 
 import com.example.app.pitstop.api.*;
-import com.example.app.user.api.UserProfile;
 import io.fluxcapacitor.javaclient.FluxCapacitor;
 import io.fluxcapacitor.javaclient.modeling.AssertLegal;
 import io.fluxcapacitor.javaclient.persisting.eventsourcing.Apply;

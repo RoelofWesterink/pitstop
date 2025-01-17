@@ -5,6 +5,7 @@ import io.fluxcapacitor.javaclient.modeling.Aggregate;
 import lombok.Builder;
 import lombok.Singular;
 import lombok.Value;
+import lombok.With;
 
 import java.time.Instant;
 import java.util.List;
@@ -22,6 +23,7 @@ public class Incident {
     Instant start, end;
 
     @Singular
+    @With
     List<Offer> offers;
 
     Assistance assistance;
