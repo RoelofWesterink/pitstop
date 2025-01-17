@@ -1,12 +1,15 @@
 package com.example.app.pitstop;
 
 import com.example.app.pitstop.api.*;
+import com.example.app.pitstop.command.CloseIncident;
 import com.example.app.refdata.api.OperatorId;
 import io.fluxcapacitor.common.serialization.JsonUtils;
 import io.fluxcapacitor.javaclient.test.TestFixture;
+import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.util.List;
 
 class PitStopTest {
@@ -46,6 +49,13 @@ class PitStopTest {
                 .givenPost("api/incidents/0/offers", JsonUtils.asJson(offerDetails))
                 .givenPost("api/incidents/0/close", null)
                 .whenGet("/api/incidents").<List<Incident>>expectResult(l -> l.getFirst().isClosed());
+    }
+
+    @Test
+    void closeScheduled() {
+        IncidentDetails incidentDetails = IncidentDetails.builder().description("hoi").vehicle(Vehicle.builder().licensePlateNumber("06-11").build()).location(GeoLocation.builder().latitude(BigDecimal.ONE).longitude(BigDecimal.ONE).build()).build();
+         testFixture.givenPost("/api/incidents", JsonUtils.asJson(incidentDetails))
+                .whenTimeElapses(Duration.ofHours(25)).expectEvents(Is.isA(CloseIncident.class));
     }
 
 
