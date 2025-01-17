@@ -38,6 +38,16 @@ class PitStopTest {
                 .whenGet("/api/incidents").<List<Incident>>expectResult(l -> l.getFirst().getOffers().getFirst().isAccepted());
     }
 
+    @Test
+    void closeIndicent() {
+        IncidentDetails incidentDetails = IncidentDetails.builder().description("hoi").vehicle(Vehicle.builder().licensePlateNumber("06-11").build()).location(GeoLocation.builder().latitude(BigDecimal.ONE).longitude(BigDecimal.ONE).build()).build();
+        OfferDetails offerDetails = OfferDetails.builder().operatorId(new OperatorId("0")).price(BigDecimal.TWO).build();
+        testFixture.givenPost("/api/incidents", JsonUtils.asJson(incidentDetails))
+                .givenPost("api/incidents/0/offers", JsonUtils.asJson(offerDetails))
+                .givenPost("api/incidents/0/close", null)
+                .whenGet("/api/incidents").<List<Incident>>expectResult(l -> l.getFirst().isClosed());
+    }
+
 
     @Test
     void getViaApi() {
